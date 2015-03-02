@@ -9,6 +9,7 @@
 
     <script src="components/angular/angular.js"></script>
     <script src="components/angular-route/angular-route.js"></script>
+    <script src="components/angular-cookies/angular-cookies.js"></script>
     <script src="components/firebase/firebase.js"></script>
     <script src="components/angularfire/dist/angularfire.js"></script>
     
@@ -16,6 +17,9 @@
 </head>
 <body>
     <h2><a href="/#/">Chair</a></h2>
+    <div ng-controller="credentialCtrl">
+        <input ng-model="me.name" ng-change="update()" />
+    </div>
     <div ng-view/>
 </body>
 </html>
