@@ -13,95 +13,65 @@ var fireRef = new Firebase(chairFirebaseUrl);
 var myId = null;
 
 angular.module('chairApp', ['ngRoute','firebase','ngCookies'])
-.factory("Auth", ["$firebaseAuth", function($firebaseAuth) {
-	var ref = new Firebase(chairFirebaseUrls.auth);
-	return $firebaseAuth(ref);
-}])
-.factory('IdentityService', function ($cookieStore, $firebase) {
-	
-	var id = $cookieStore.get('id') || null;
-	if (!id) {
-		$firebase(new Firebase(chairFirebaseUrls.people)).$push({name:''}).then(function(ref){
-			$cookieStore.put('id',ref.key());
-		})
+
+.factory('IdentityService', function ($cookieStore){
+	return {
+    get : function() {
+        return $cookieStore.get('name') || '';
+    },
+    set : function(n) {
+        $cookieStore.put('name',n);
+    }
+  }
+})
+.controller('homeCtrl', function ($scope) {
+	$scope.user;
+	$scope.meetingId;
+})
+.controller('credentialCtrl', function ($scope, $cookieStore) {
+	$scope.user = {
+	  name: function(newName) {
+	    if (angular.isDefined(newName)) {
+	      $cookieStore.put('name',n);
+	    }
+	    return $cookieStore.get('name') || '';
+	  }
+	};
+})
+.controller('chairCtrl', function ($scope, $firebase, $location) {
+
+	$scope.newMeeting = function () {
+		// $scope.meetingId = randomString(5);
+		var sync = $firebase(new Firebase(chairFirebaseUrl));
+
+		// Create a meeting
+		$firebase(new Firebase(chairFirebaseUrls.meetings)).$push({}).then(function(ref){
+			$scope.meetingId = ref.key();
+			$location.path($location.path()+'/'+$scope.meetingId );
+		});
 	}
-
-	var sync = $firebase(new Firebase(chairFirebaseUrls.people).child(id));
-	return sync.$asObject();
+	
 })
-.controller('credentialCtrl', function ($scope, IdentityService) {
-	IdentityService.$bindTo($scope, "me");
-})
-.controller('homeCtrl', function ($scope, $firebase) {
-	// $firebase(new Firebase(chairFirebaseUrls.people))
-	// .$push({name: 'unknown'})
-	// .then(function(ref){
-	// 	// TODO: save ref into cookie
-	// 	myId = ref.key();
-	// 	$cookieStore.put(myId,null);
-	// });
-})
-.controller('chairCtrl', function ($scope, $firebase, IdentityService) {
-	// $scope.meetingId = randomString(5);
-	var sync = $firebase(new Firebase(chairFirebaseUrl));
-
-	// Create a meeting
-	$firebase(new Firebase(chairFirebaseUrls.meetings)).$push({}).then(function(ref){
-		$scope.meetingId = ref.key();
-
-		// save some meta data
-		// $firebase(new Firebase(chairFirebaseUrls.meta)).$push({
-		// 	time:(new Date().getTime()),
-		// 	chair: IdentityService.get() || 'unknownchair'
-		// }).then(function(ref){
-			
-		// });
-	});
-
-	// sync.$push({
-	// 	time: (new Date().getTime()),
-	// 	attendance: []
-	// }).then(function(newChildRef) {
-	// 	$scope.meetingId = newChildRef.key();
-	// 	console.log("added record with id " + newChildRef.key());
-	// });;
-
-})
-.controller('meetingCtrl', function ($scope, $routeParams, $firebase, IdentityService) {
+.controller('meetingCtrl', function ($scope, $routeParams, $firebase, $cookieStore, IdentityService) {
 	$scope.meetingId = $routeParams.meetingId;
 	$scope.currentUrl = encodeURIComponent(window.location);
 
-	$scope.attendance = $firebase(new Firebase(chairFirebaseUrls.meetings).child($scope.meetingId))
+	$scope.attendance = $firebase(new Firebase(chairFirebaseUrls.meetings).child($routeParams.meetingId))
 	.$asArray();
 
-	$scope.me = IdentityService;
-	$scope.me.$loaded( function (data){
-		$firebase(new Firebase(chairFirebaseUrls.meetings).child($scope.meetingId).child(data.$id)).$set({name:data.name});
-		// $scope.attendance.$add(data);
-		
-	});
+	$scope.attendance.$add($scope.user);
+	$cookieStore.put('name',$scope.user);
 
+})
+.controller('roomCtrl', function ($scope, $routeParams, $firebase, $cookieStore, IdentityService) {
+	$scope.meetingId = $routeParams.meetingId;
+	$scope.currentUrl = encodeURIComponent(window.location);
 
-	$scope.attend = function (){
+	$scope.attendance = $firebase(new Firebase(chairFirebaseUrls.meetings).child($routeParams.meetingId))
+	.$asArray();
 
-		$firebase(new Firebase(chairFirebaseUrls.meetings).child($scope.meetingId).child(myId))
-		.$set({
-			name: $scope.me.name,
-			time: (new Date().getTime())
-		})
-		.then(function(ref){
-			// TODO: save ref into cookie
-			// myId = ref.key();
-		});
-
-		// sync.attendance.$push({
-		// 	name: $scope.me.name,
-		// 	time: (new Date().getTime())
-		// }).then(function(newChildRef) {
-		// 	$scope.me.id = newChildRef.key();
-		//   console.log("added record with id " + newChildRef.key());
-		// });
-	};
+	$scope.attendance.$add($scope.user);
+	$cookieStore.put('name',$scope.user);
 
 })
 .config(['$routeProvider',
@@ -118,6 +88,10 @@ angular.module('chairApp', ['ngRoute','firebase','ngCookies'])
       when('/meeting/:meetingId', {
         templateUrl: 'partials/meeting.html',
         controller: 'meetingCtrl'
+      }).
+      when('/meeting/:meetingId/room', {
+        templateUrl: 'partials/room.html',
+        controller: 'roomCtrl'
       }).
       otherwise({
         redirectTo: '/'

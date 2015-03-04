@@ -15,11 +15,17 @@
     
     <script src="app.js"></script>
 </head>
-<body>
+<body ng-controller="homeCtrl">
+
     <h2><a href="/#/">Chair</a></h2>
+    
     <div ng-controller="credentialCtrl">
-        <input ng-model="me.name" ng-change="update()" />
+        <input ng-model="user.name" ng-model-options="{ getterSetter: true }" />
     </div>
-    <div ng-view/>
+
+    <span ng-show="meetingId">meeting: {{meetingId}}</span>
+
+	<div ng-view/>
+
 </body>
 </html>
