@@ -20,10 +20,12 @@
     <h2><a href="/#/">Chair</a></h2>
     
     <div ng-controller="credentialCtrl">
-        <input ng-model="user.name" ng-model-options="{ getterSetter: true }" />
+        <input ng-model="user.name" ng-change="setUser()" placeholder="what's your name?" />
+        <input ng-model="user.$value" ng-change="setUser()" placeholder="what's your name?" />
+        <span ng-model="user.id" />
     </div>
 
-    <span ng-show="meetingId">meeting: {{meetingId}}</span>
+    <span ng-show="meetingId">meeting: {{meeting.id}}</span>
 
 	<div ng-view/>
 

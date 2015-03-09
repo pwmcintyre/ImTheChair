@@ -1,4 +1,4 @@
-<p><b>id:</b>{{ meetingId }}</p>
+<p><b>id:</b>{{ meeting.id }}</p>
 <img ng-src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{currentUrl}}" />
 
 <ul>
@@ -6,3 +6,7 @@
   	{{person.name}}
   </li>
 </ul>
+
+<button ng-click="attend()">attend</button>
+
+<span ng-model="me" />
