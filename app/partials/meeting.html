@@ -1,9 +1,17 @@
-<p><b>id:</b>{{ meetingId }}</p>
 
-<img ng-src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{currentUrl}}" />
+<p><b>Meeting: </b>{{ meetingId }}</p>
+
+<me ng-show="!hasAttended"></me>
+<button ng-disabled="{{pending}}" ng-show="!hasAttended" ng-click="attend()">Attend</button>
+
+<hr />
 
 <ul>
-  <li ng-repeat="person in attendance">
-  	{{person.name}}
-  </li>
+	<li ng-repeat="person in attendance">
+		{{person.name}} <a ng-click="statusToggle(person)">({{person.status}})</a>
+	</li>
 </ul>
+
+<hr />
+
+<img ng-src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{qrUrl}}" />
