@@ -1,17 +1,23 @@
 
-<p><b>Meeting: </b>{{ meetingId }}</p>
+<h2><b>Meeting: </b>{{ meetingId }}</h2>
 
-<me ng-show="!hasAttended"></me>
-<button ng-disabled="{{pending}}" ng-show="!hasAttended" ng-click="attend()">Attend</button>
+<div ng-show="!hasAttended" class="row">
+	<me></me>
 
-<hr />
+	<div>
+		<button class="btn waves-effect waves-light right" ng-disabled="{{pending}}"ng-click="attend()">
+			Attend
+			<i class="mdi-action-account-circle right"></i>
+		</button>
+	</div>
+</div>
 
-<ul>
-	<li ng-repeat="person in attendance">
-		{{person.name}} <a ng-click="statusToggle(person)">({{person.status}})</a>
+<h4>Attendance:</h4>
+<ul class="collection">
+	<li ng-repeat="person in attendance" ng-click="statusToggle(person)" class="collection-item">
+		{{person.name}}
+		<span class="new badge" ng-class="{red:person.status=='late'}">{{person.status}}</span>
 	</li>
 </ul>
 
-<hr />
-
-<img ng-src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{qrUrl}}" />
+<img class="responsive-img" ng-src="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{qrUrl}}" />

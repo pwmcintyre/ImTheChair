@@ -15,10 +15,10 @@ var myId = null;
 angular.module('chairApp', ['ngRoute','firebase','ngCookies'])
 
 .factory('meService', function ($cookieStore){
-	var name = $cookieStore.get('name') || 'noname';
+	var name = $cookieStore.get('name') || '';
 	return {
 		name : function(n) {
-			if (n) {
+			if (typeof n !== "undefined" && typeof n.length !== "undefined") {
 				name = n;
 				$cookieStore.put('name',n);
 			}

@@ -1,6 +1,6 @@
-body {
-  font-family: Arial, sans-serif;
+.input-field label {
+  z-index: -1;
 }
-h2 {
-  color: red;
+span.badge.new:after {
+  content: "";
 }
