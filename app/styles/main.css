@@ -4,3 +4,33 @@
 span.badge.new:after {
   content: "";
 }
+header nav {
+  height: 130px;
+  font-weight: bold;
+}
+header nav .nav-wrapper {
+  background-image: url('http://cdn.shopify.com/s/files/1/0223/7461/products/FRASIER_LOUNGE_CHAIR-253_large.png?v=1414207443');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  text-align: center;
+}
+header nav .nav-wrapper a {
+  color: white;
+}
+.home {
+  margin-left: 50%;
+}
+.home .valign-wrapper {
+  position: absolute;
+  height: 50%;
+  margin-left: -32px;
+}
+.isChair {
+  text-align: center;
+  font-weight: bold;
+}
+.isChair i {
+  padding-right: 17px;
+  float: right;
+}

@@ -1,23 +1,60 @@
 
-<h2><b>Meeting: </b>{{ meetingId }}</h2>
 
-<div ng-show="!hasAttended" class="row">
-	<me></me>
+<div class="row">
+	<div class="col s12 m12 l8 offset-l2">
+		<h2><b>Meeting: </b>{{ meetingId }}</h2>
 
-	<div>
-		<button class="btn waves-effect waves-light right" ng-disabled="{{pending}}"ng-click="attend()">
-			Attend
-			<i class="mdi-action-account-circle right"></i>
-		</button>
 	</div>
 </div>
 
-<h4>Attendance:</h4>
-<ul class="collection">
-	<li ng-repeat="person in attendance" ng-click="statusToggle(person)" class="collection-item">
-		{{person.name}}
-		<span class="new badge" ng-class="{red:person.status=='late'}">{{person.status}}</span>
-	</li>
-</ul>
+<div class="row">
+	<div class="col s12 m6 l4 offset-l2">
+		<span>
+			<i class="mdi-image-center-focus-strong"></i> scan me
+		</span>
+		<span class="right">
+			touch to hide <i class="mdi-av-album"></i>
+		</span>
+		<img class="responsive-img" ng-src="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{qrUrl}}" />
+	</div>
+	<div class="col s12 m6 l4">
 
-<img class="responsive-img" ng-src="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{qrUrl}}" />
+		<div ng-hide="chair" ng-show="!hasAttended" class="row">
+			<me class="col s12 l12"></me>
+
+			<div class="col s12 l12">
+				<button class="btn waves-effect waves-light right" ng-disabled="{{pending}}" ng-click="attend()">
+					Attend
+					<i class="mdi-action-account-circle right"></i>
+				</button>
+			</div>
+		</div>
+
+		<div ng-hide="!chair" ng-show="!hasAttended" class="row">
+			<div class="isChair">
+				<i class="mdi-action-account-circle"></i>You're the chair!
+			</div>
+		</div>
+
+		<div class="card-panel">
+			<h4>Attendance:</h4>
+			<ul class="collection">
+				<li ng-repeat="person in attendance" ng-click="statusToggle(person)" class="collection-item">
+					{{person.name}}
+					<span class="new badge" ng-class="{red:person.status=='late'}">{{person.status}}</span>
+				</li>
+			</ul>
+			
+		</div>
+
+		<div class="row" ng-show="chair">
+			<div class="col s12 l12">
+				<button class="btn waves-effect waves-light right" ng-disabled="{{pending}}" ng-click="attend()">
+					New Chair!
+					<i class="mdi-action-autorenew right"></i>
+				</button>
+			</div>
+		</div>
+
+	</div>
+</div>

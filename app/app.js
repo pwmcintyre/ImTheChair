@@ -15,6 +15,7 @@ var myId = null;
 angular.module('chairApp', ['ngRoute','firebase','ngCookies'])
 
 .factory('meService', function ($cookieStore){
+	var chair = $cookieStore.get('meetingid') || '';;
 	var name = $cookieStore.get('name') || '';
 	return {
 		name : function(n) {
@@ -23,6 +24,13 @@ angular.module('chairApp', ['ngRoute','firebase','ngCookies'])
 				$cookieStore.put('name',n);
 			}
 			return name;
+		},
+		chair : function(meetingid) {
+			if (typeof meetingid !== "undefined") {
+				chair = meetingid;
+				$cookieStore.put('meetingid',meetingid);
+			}
+			return chair;
 		}
 	}
 })
@@ -63,8 +71,14 @@ angular.module('chairApp', ['ngRoute','firebase','ngCookies'])
     templateUrl: 'partials/me.html'
   };
 })
-.controller('homeCtrl', function ($scope, meetingService) {
-	$scope.meetingId = randomString(10);
+.controller('homeCtrl', function ($scope, $location, $routeParams, meetingService, meService) {
+	// $scope.meetingId = randomString(10);
+
+	if ($location.path().length < 2) {
+		var id = randomString(10);
+		meService.chair(id);
+		$location.path('/'+id);
+	}
 })
 .controller('meetingCtrl', function ($scope, $routeParams, meetingService, meService) {
 	$scope.meetingId = $routeParams.meetingId;
@@ -77,6 +91,8 @@ angular.module('chairApp', ['ngRoute','firebase','ngCookies'])
 	// bind to firebase meeting array
 	$scope.attendance = meetingService.get($scope.meetingId);
 
+	$scope.chair = meService.chair() == $scope.meetingId;
+
 	$scope.attend = function () {
 
 		$scope.pending = true;
@@ -88,6 +104,9 @@ angular.module('chairApp', ['ngRoute','firebase','ngCookies'])
 	};
 
 	$scope.statusToggle = function (person) {
+		if (!$scope.chair) {
+			return;
+		}
 		person.status = person.status == 'ontime' ? 'late' : 'ontime';
 		meetingService.save(person);
 	};

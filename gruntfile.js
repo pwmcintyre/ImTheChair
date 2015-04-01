@@ -22,7 +22,7 @@ module.exports = function (grunt) {
             },
             less: {
                 files: ['app/styles/*.less'],
-                tasks: ['less:server']
+                tasks: ['less:server','connect:livereload']
             },
             livereload: {
                 options: {
