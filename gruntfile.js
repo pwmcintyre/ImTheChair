@@ -71,6 +71,9 @@ module.exports = function (grunt) {
                     'app/components/bootstrap/less/bootstrap.css': 'app/components/bootstrap/less/bootstrap.less'
                 }
             }
+        },
+        exec: {
+          deploy: 'firebase deploy'
         }
     });
 
@@ -81,6 +84,14 @@ module.exports = function (grunt) {
             'connect:livereload',
             'open',
             'watch'
+        ]);
+    });
+
+    grunt.registerTask('deploy', function (target) {
+
+        grunt.task.run([
+            'less:server',
+            'exec:deploy'
         ]);
     });
 };
