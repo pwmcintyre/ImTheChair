@@ -110,6 +110,31 @@ angular.module('chairApp', ['ngRoute','firebase','ngCookies'])
 		person.status = person.status == 'ontime' ? 'late' : 'ontime';
 		meetingService.save(person);
 	};
+
+	var tickets = {
+		chair : 0,
+		ontime: 1,
+		late  : 4
+	}
+	$scope.nextChair = function () {
+		if (!$scope.chair) {
+			return;
+		}
+
+		var people = [];
+
+		angular.forEach($scope.attendance, function(person, key) {
+			console.log(tickets[person.status] + ' tickets for ' + person.name)
+			for (var i = 0; i < tickets[person.status]||0; i++) {
+				people.push(person);
+			}
+		});
+
+		var person = people[getRandomInt(0,people.length)];
+
+		person.status = 'chair';
+		meetingService.save(person);
+	};
 })
 .config(['$routeProvider',
 	function($routeProvider) {
@@ -140,4 +165,8 @@ function randomString(length) {
 	text += possible.charAt(Math.floor(Math.random() * possible.length));
 
 	return text;
+}
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
 }

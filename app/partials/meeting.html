@@ -8,7 +8,7 @@
 </div>
 
 <div class="row">
-	<div class="col s12 m6 l4 offset-l2">
+	<div ng-show="chair" class="col s12 m6 l4 offset-l2">
 		<span>
 			<i class="mdi-image-center-focus-strong"></i> scan me
 		</span>
@@ -38,8 +38,11 @@
 
 		<div class="card-panel">
 			<h4>Attendance:</h4>
+
+			<div class="loading"></div>
+
 			<ul class="collection">
-				<li ng-repeat="person in attendance" ng-click="statusToggle(person)" class="collection-item">
+				<li ng-repeat="person in attendance" ng-click="statusToggle(person)" ng-class="person.status" class="collection-item">
 					{{person.name}}
 					<span class="new badge" ng-class="{red:person.status=='late'}">{{person.status}}</span>
 				</li>
@@ -47,9 +50,9 @@
 			
 		</div>
 
-		<div class="row" ng-show="chair">
+		<div class="row" ng-show="chair && attendance.length>0">
 			<div class="col s12 l12">
-				<button class="btn waves-effect waves-light right" ng-disabled="{{pending}}" ng-click="attend()">
+				<button class="btn waves-effect waves-light right" ng-disabled="{{pending}}" ng-click="nextChair()">
 					New Chair!
 					<i class="mdi-action-autorenew right"></i>
 				</button>

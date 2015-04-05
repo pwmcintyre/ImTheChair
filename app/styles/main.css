@@ -34,3 +34,7 @@ header nav .nav-wrapper a {
   padding-right: 17px;
   float: right;
 }
+li.chair {
+  background-color: lightgray;
+  font-weight: bold;
+}
